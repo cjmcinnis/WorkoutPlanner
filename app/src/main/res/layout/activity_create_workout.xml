@@ -4,18 +4,17 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/workout_recycler">
+    android:id="@+id/exercise_recycler">
 
     <android.support.v7.widget.RecyclerView
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height ="wrap_content"
-        android:id="@+id/workout_recycler_view"/>
+        android:layout_height="wrap_content">
 
+    </android.support.v7.widget.RecyclerView>
     <Button
-        android:id="@+id/new_workout_button"
+        android:id="@+id/add_exercise"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/create_workout" />
+        android:text="@string/add_exercise" />
 
 </LinearLayout>

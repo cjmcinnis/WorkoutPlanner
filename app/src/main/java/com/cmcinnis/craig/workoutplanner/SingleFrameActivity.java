@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 /*
- * An abstract class used for quickly implementation a holder class for hosting fragments
+ * An abstract class used for quick implementation of a holder class for hosting fragments
  *
  */
 

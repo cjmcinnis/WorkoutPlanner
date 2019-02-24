@@ -1,23 +1,37 @@
 package com.cmcinnis.craig.workoutplanner;
 
-import android.databinding.BaseObservable;
-import android.databinding.Bindable;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 
 import java.util.List;
+import java.util.UUID;
 
-public class Workout extends BaseObservable{
+@Entity
+public class Workout{
 
+    @PrimaryKey(autoGenerate = true)
+    @NonNull
+    @ColumnInfo(name= "id")
+    private UUID mId;
+
+    @ColumnInfo(name= "name")
     private String mWorkoutName;
+
+    @ColumnInfo(name = "exercise_list")
     private List<Exercise> mExerciseList;
 
     public Workout(String workoutName){
         mWorkoutName = workoutName;
     }
 
-    @Bindable
+    public UUID getId(){ return this.mId; }
+
     public String getWorkoutName() {
-        return mWorkoutName;
+        return this.mWorkoutName;
     }
+
 
     public void setWorkoutName(String workoutName) {
         mWorkoutName = workoutName;
