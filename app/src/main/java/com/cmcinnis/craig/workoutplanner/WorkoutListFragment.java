@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cmcinnis.craig.workoutplanner.Database.Workout;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,32 +1,38 @@
-package com.cmcinnis.craig.workoutplanner;
+package com.cmcinnis.craig.workoutplanner.Database;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+
+import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 
 import java.util.List;
 import java.util.UUID;
 
-@Entity
+@Entity(tableName = "workout_table")
 public class Workout{
 
     @PrimaryKey(autoGenerate = true)
     @NonNull
-    @ColumnInfo(name= "id")
-    private UUID mId;
+    private long mId;
 
-    @ColumnInfo(name= "name")
     private String mWorkoutName;
 
-    @ColumnInfo(name = "exercise_list")
-    private List<Exercise> mExerciseList;
+    //List of all exercises associated with workout
+    @Ignore
+    public List<Exercise> exercises;
 
     public Workout(String workoutName){
         mWorkoutName = workoutName;
     }
 
-    public UUID getId(){ return this.mId; }
+    public long getId(){ return this.mId; }
+
+    public void setId(long mId) {
+        this.mId = mId;
+    }
 
     public String getWorkoutName() {
         return this.mWorkoutName;
@@ -36,5 +42,6 @@ public class Workout{
     public void setWorkoutName(String workoutName) {
         mWorkoutName = workoutName;
     }
+
 
 }
