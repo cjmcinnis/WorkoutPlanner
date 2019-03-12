@@ -8,6 +8,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+
 @Database(entities = {Workout.class, Exercise.class}, version = 1)
 abstract class WorkoutRoomDatabase extends RoomDatabase {
     private static volatile WorkoutRoomDatabase INSTANCE;
@@ -24,6 +26,8 @@ abstract class WorkoutRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             WorkoutRoomDatabase.class, DB_NAME)
+                            .fallbackToDestructiveMigration()
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
@@ -53,16 +57,16 @@ abstract class WorkoutRoomDatabase extends RoomDatabase {
         protected Void doInBackground(final Void... params) {
             mDao.deleteWorkouts();
             mDao.deleteExercises();
-            Workout workout = new Workout("workout1");
+            Workout workout = new Workout("Arms Day");
             Exercise exercise = new Exercise.Builder("Bench Press", 3, 10).setRestTime(90).build();
-            workout.exercises.add(exercise);
+            workout.addExercise(exercise);
             exercise = new Exercise.Builder("Curls", 5, 6).build();
-            workout.exercises.add(exercise);
-
+            workout.addExercise(exercise);
             mDao.insertWorkoutWithExercises(workout);
+
             workout = new Workout("Cardio");
             exercise = new Exercise.Builder("Jogging", 3, 50).setRestTime(90).build();
-            workout.exercises.add(exercise);
+            workout.addExercise(exercise);
             mDao.insertWorkoutWithExercises(workout);
             return null;
         }

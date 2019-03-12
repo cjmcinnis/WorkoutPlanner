@@ -1,5 +1,6 @@
 package com.cmcinnis.craig.workoutplanner.Database;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -8,6 +9,8 @@ import android.support.annotation.NonNull;
 
 import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,10 +25,36 @@ public class Workout{
 
     //List of all exercises associated with workout
     @Ignore
-    public List<Exercise> exercises;
+    private List<Exercise> mExercises;
 
     public Workout(String workoutName){
         mWorkoutName = workoutName;
+        mExercises = new ArrayList<>();
+    }
+
+    public List<Exercise> getExercises(){
+        return mExercises;
+    }
+
+    public void addExercise(Exercise exercise){
+        mExercises.add(exercise);
+    }
+
+    public void removeExercise(Exercise exercise)
+    {
+        mExercises.remove(exercise);
+    }
+
+    /*
+     * Removes exercise at given position
+     */
+    public void removeExercise(int i)
+    {
+        mExercises.remove(i);
+    }
+
+    public void setExercises(List<Exercise> exercises){
+        mExercises = exercises;
     }
 
     public long getId(){ return this.mId; }

@@ -1,5 +1,7 @@
 package com.cmcinnis.craig.workoutplanner;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +17,21 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.cmcinnis.craig.workoutplanner.Database.Workout;
+import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WorkoutListFragment extends Fragment {
 
+    private static final String TAG = "WorkoutListFragment";
+    public static final String WORKOUT_ID_REQUEST = "WorkoutId";
+    public static final int NEW_WORKOUT_ACTIVITY_REQUEST_CODE = 1;
     private RecyclerView mWorkoutRecyclerView;
     private WorkoutAdapter mAdapter;
     private Button mNewWorkoutButton;
+    private WorkoutViewModel mWorkoutViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,30 +53,50 @@ public class WorkoutListFragment extends Fragment {
         mNewWorkoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createNewWorkout();
+                //pass in null since we are creating a new workout
+                editWorkout(null);
             }
         });
+
+        //setup workoutviewmodel
+        mWorkoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
+
+
 
         updateUI();
 
         return view;
     }
 
+    private void setupWorkoutObserver() {
+        mWorkoutViewModel.getAllWorkouts().observe(this, new Observer<List<Workout>>() {
+            @Override
+            public void onChanged(@Nullable List<Workout> workouts) {
+                if (mAdapter != null) {
+                    mAdapter.setWorkouts(workouts);
+                }else {
+                    Log.e(TAG, "Attempted to update workout list with null adapter");
+                }
+            }
+        });
+    }
+
     // Reload the recyclerview when it is updated or first created
     public void updateUI(){
 
-
+        //setup adapter if we need to
         if(mAdapter == null) {
-            List<Workout> mWorkouts = new ArrayList<>();
-            mWorkouts.add(new Workout("test"));
-            mWorkouts.add(new Workout("test2"));
 
             //setup adapter
-            mAdapter = new WorkoutAdapter(mWorkouts);
+            mAdapter = new WorkoutAdapter();
+
             //mWorkoutRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
             mWorkoutRecyclerView.setAdapter(mAdapter);
         }else{
         }
+
+        //update workout list
+        setupWorkoutObserver();
     }
 
     @Override
@@ -75,12 +104,28 @@ public class WorkoutListFragment extends Fragment {
         super.onDestroy();
     }
 
-    // Send user to activity for setting up a new workout
-    private void createNewWorkout(){
+    /*
+     * Starts an activity for modifying a workout
+     * if parameter is null then we don't pass one in
+     */
+    private void editWorkout(Workout workout){
         Intent intent = CreateWorkoutActivity.newIntent(getActivity());
+
+        if(workout != null)
+        {
+            intent.putExtra(WORKOUT_ID_REQUEST, workout.getId());
+        }
+
+        //startActivityForResult(intent, NEW_WORKOUT_ACTIVITY_REQUEST_CODE);
         startActivity(intent);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        updateUI();
+    }
 
     private class WorkoutHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
         private Workout mWorkout;
@@ -90,12 +135,16 @@ public class WorkoutListFragment extends Fragment {
 
             super(inflater.inflate(viewType, parent, false));
             mTextView = (TextView) itemView.findViewById(R.id.workout_title);
+            itemView.setOnClickListener(this);
         }
 
-        // when clicked send user to WorkoutViewerActivity
+        /* when clicked send user to WorkoutViewerActivity
+         * pass in workout
+         */
         @Override
         public void onClick(View v) {
 
+            editWorkout(mWorkout);
         }
 
         // Update each row with data
@@ -109,11 +158,9 @@ public class WorkoutListFragment extends Fragment {
 
 
 
-        private List<Workout> mWorkouts;
+        private List<Workout> mWorkouts = Collections.emptyList();
 
-        public WorkoutAdapter(List<Workout> workouts){
-            mWorkouts = workouts;
-        }
+        public WorkoutAdapter(){ }
 
         @NonNull
         @Override
@@ -136,7 +183,13 @@ public class WorkoutListFragment extends Fragment {
             return mWorkouts.size();
         }
 
-        public void setWorkouts(List<Workout> workouts){mWorkouts = workouts;}
+        /* Update workout list and update our list
+         *
+         */
+        public void setWorkouts(List<Workout> workouts){
+            mWorkouts = workouts;
+            notifyDataSetChanged();
+        }
 
         @Override
         public int getItemViewType(int position) {

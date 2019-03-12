@@ -35,6 +35,18 @@ public class Exercise {
         mReps = builder.mReps;
         mSets = builder.mSets;
         mRestDuration = builder.mRestDuration;
+        mWorkoutId = builder.mWorkoutId;
+    }
+
+    /*
+     * Method for checking if two exercises are the same
+     */
+    public boolean equals(Object obj){
+        if (obj == null) return false;
+        if (obj == this) return true;
+        if (!(obj instanceof Exercise)) return false;
+        Exercise o = (Exercise) obj;
+        return o.mExerciseId == this.mExerciseId;
     }
 
     public long getWorkoutId() {
@@ -93,16 +105,23 @@ public class Exercise {
         private int mReps;
         private int mSets;
         private int mRestDuration;
+        private long mWorkoutId;
 
         public Builder(String name, int sets, int reps){
             mReps = reps;
             mExerciseName = name;
             mSets = sets;
             mRestDuration = DEFAULT_REST;
+            mWorkoutId = -1;
         }
 
         public Builder setRestTime(int restTime){
             this.mRestDuration = restTime;
+            return this;
+        }
+
+        public Builder setWorkoutId(long workoutId){
+            this.mWorkoutId = workoutId;
             return this;
         }
 

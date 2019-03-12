@@ -16,9 +16,13 @@ public class WorkoutRepository {
         mAllWorkouts = mWorkoutDao.getAllWorkouts();
     }
 
-    LiveData<List<Workout>> getAllWorkouts(){
+    public LiveData<List<Workout>> getAllWorkouts(){
         return mWorkoutDao.getAllWorkouts();
     }
+
+    public LiveData<Workout> getWorkout(long workoutId) { return mWorkoutDao.getWorkout(workoutId); }
+    public LiveData<List<Exercise>> getExercises(long workoutId) { return mWorkoutDao.getExercises(workoutId); }
+
 
     public void insertWorkoutAndExercises(Workout workout){
         new insertAsyncTask(mWorkoutDao).execute(workout);
