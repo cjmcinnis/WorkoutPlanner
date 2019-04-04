@@ -10,9 +10,7 @@ import android.support.annotation.NonNull;
 import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 @Entity(tableName = "workout_table")
 public class Workout{

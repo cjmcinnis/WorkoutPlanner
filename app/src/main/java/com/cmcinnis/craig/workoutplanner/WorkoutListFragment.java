@@ -68,6 +68,9 @@ public class WorkoutListFragment extends Fragment {
         return view;
     }
 
+    /*
+     * Sets up an observer to check when our WorkoutList has beeen updated
+     */
     private void setupWorkoutObserver() {
         mWorkoutViewModel.getAllWorkouts().observe(this, new Observer<List<Workout>>() {
             @Override
@@ -92,6 +95,7 @@ public class WorkoutListFragment extends Fragment {
 
             //mWorkoutRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
             mWorkoutRecyclerView.setAdapter(mAdapter);
+
         }else{
         }
 
@@ -106,7 +110,7 @@ public class WorkoutListFragment extends Fragment {
 
     /*
      * Starts an activity for modifying a workout
-     * if parameter is null then we don't pass one in
+     * if parameter is null then we are creating a new workout
      */
     private void editWorkout(Workout workout){
         Intent intent = CreateWorkoutActivity.newIntent(getActivity());

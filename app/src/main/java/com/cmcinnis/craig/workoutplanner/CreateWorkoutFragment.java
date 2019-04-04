@@ -7,6 +7,8 @@ import android.support.annotation.LongDef;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,8 +25,12 @@ import java.util.List;
 
 public class CreateWorkoutFragment extends Fragment {
     private static final String TAG = "CreateWorkoutFragment";
+    private static final int REQUEST_EXERCISE = 0; //code when returning from ExerciseDialogFragment
+    private static final String DIALOG_EXERCISE = "ExerciseDialog"; //code when returning from ExerciseDialogFragment
     private Workout mWorkout;
     private WorkoutViewModel mWorkoutViewModel;
+    private RecyclerView mExerciseRecyclerView;
+    private ExerciseAdapter mAdapter;
 
     /*
      * Creates an instance of this fragment with a supplied workout Id
@@ -55,20 +61,43 @@ public class CreateWorkoutFragment extends Fragment {
         mWorkoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
 
         long workoutId = getArguments().getLong(WorkoutListFragment.WORKOUT_ID_REQUEST);
-        if(workoutId == -1)
+
+        mExerciseRecyclerView = view.findViewById(R.id.create_exercise_recycler);
+        mExerciseRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        updateUI();
+
+        mWorkout = new Workout("");
+        if(workoutId != -1)
         {
-            mWorkout = new Workout("");
-        }else{
+            // if we sent in a workout then load it into UI
             setupObservers(workoutId);
         }
+
+
 
         return view;
     }
 
     /*
+     * Updates our ExerciseRecyclerView when it has an update or creates it if is the first time in use
+     */
+    private void updateUI(){
+        //setup adapter if we need to
+        if(mAdapter == null) {
+
+            //setup adapter
+            mAdapter = new ExerciseAdapter();
+
+            //mWorkoutRecyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+            mExerciseRecyclerView.setAdapter(mAdapter);
+        }else{
+        }
+    }
+
+    /*
      * Setups an observer to watch when workout & exercises change
      */
-    public void setupObservers(long workoutId){
+    private void setupObservers(long workoutId){
         mWorkoutViewModel.getWorkout(workoutId).observe(this, new Observer<Workout>() {
             @Override
             public void onChanged(@Nullable Workout workout) {
@@ -82,6 +111,8 @@ public class CreateWorkoutFragment extends Fragment {
             public void onChanged(@Nullable List<Exercise> exercises) {
                 mWorkout.setExercises(exercises);
                 Log.d(TAG, "Setting workout exercise to list of size: " + mWorkout.getExercises().size());
+                //update our adapter list when ever exercises are updated
+                mAdapter.setExercises(mWorkout.getExercises());
             }
         });
     }
@@ -93,7 +124,9 @@ public class CreateWorkoutFragment extends Fragment {
         public ExerciseHolder(LayoutInflater inflater, ViewGroup parent, int viewType) {
 
             super(inflater.inflate(viewType, parent, false));
-            //mTextView = (TextView) itemView.findViewById(R.id.workout_title);
+            mTextView = (TextView) itemView.findViewById(R.id.exercise_title);
+
+            //set listener for when we select exercise in list
             itemView.setOnClickListener(this);
         }
 
@@ -101,6 +134,12 @@ public class CreateWorkoutFragment extends Fragment {
          */
         @Override
         public void onClick(View v) {
+            // Create a dialog fragment for adding a new exercise
+            FragmentManager manager = getFragmentManager();
+            ExerciseDialogFragment dialog = ExerciseDialogFragment.newInstance(this.mExercise);
+            dialog.setTargetFragment(CreateWorkoutFragment.this, REQUEST_EXERCISE);
+            dialog.show(manager, DIALOG_EXERCISE);
+            Log.d(TAG, "Creating ExerciseDialog for " + mExercise.getExerciseName());
         }
 
         // Update each row with data
@@ -142,14 +181,14 @@ public class CreateWorkoutFragment extends Fragment {
         /* Update workout list and update our list
          *
          */
-        public void setWorkouts(List<Exercise> workouts){
-            mExercises = workouts;
+        public void setExercises(List<Exercise> exercises){
+            mExercises = exercises;
             notifyDataSetChanged();
         }
 
         @Override
         public int getItemViewType(int position) {
-            return R.layout.list_item_workout;
+            return R.layout.list_item_exercise;
         }
     }
 }

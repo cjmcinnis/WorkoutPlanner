@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
@@ -20,6 +21,9 @@ abstract class WorkoutDao {
 
     @Insert
     abstract void insertExercises(List<Exercise> exercises);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    abstract void insertExercise(Exercise exercise);
 
     @Query("DELETE FROM workout_table")
     abstract void deleteWorkouts();
@@ -38,7 +42,7 @@ abstract class WorkoutDao {
 
 
     /*
-     * Insert all exercises for a given workout
+     * Insert workout and all exercises associated
      */
     public void insertWorkoutWithExercises(Workout workout){
 

@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:id="@+id/workout_recycler">
 
     <android.support.v7.widget.RecyclerView
-        android:orientation="vertical"
+        android:id="@+id/workout_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height ="wrap_content"
-        android:id="@+id/workout_recycler_view"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/new_workout_button"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/create_workout" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/blue_add_button"
+        android:drawableLeft="@drawable/add_symbol"
+        android:text="@string/create_workout"
+        android:textColor="@color/white"
+        android:paddingHorizontal="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

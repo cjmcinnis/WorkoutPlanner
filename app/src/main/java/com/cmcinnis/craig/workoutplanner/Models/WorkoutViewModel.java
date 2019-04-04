@@ -38,4 +38,9 @@ public class WorkoutViewModel extends AndroidViewModel {
             mWorkoutRepository.insertWorkoutAndExercises(workout);
         }
     }
+
+    public void insertExercise(Exercise exercise){
+        mWorkoutRepository.insertExercise(exercise);
+    }
+
 }
