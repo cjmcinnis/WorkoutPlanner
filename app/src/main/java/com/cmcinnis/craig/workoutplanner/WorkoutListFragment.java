@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 import com.cmcinnis.craig.workoutplanner.Database.Workout;
 import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
 
@@ -28,6 +30,7 @@ public class WorkoutListFragment extends Fragment {
     private static final String TAG = "WorkoutListFragment";
     public static final String WORKOUT_ID_REQUEST = "WorkoutId";
     public static final int NEW_WORKOUT_ACTIVITY_REQUEST_CODE = 1;
+    private static final String DIALOG_WORKOUT = "WorkoutDialog"; //code when returning from ExerciseDialogFragment
     private RecyclerView mWorkoutRecyclerView;
     private WorkoutAdapter mAdapter;
     private Button mNewWorkoutButton;
@@ -54,7 +57,7 @@ public class WorkoutListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //pass in null since we are creating a new workout
-                editWorkout(null);
+                modifyWorkout(null);
             }
         });
 
@@ -101,6 +104,28 @@ public class WorkoutListFragment extends Fragment {
 
         //update workout list
         setupWorkoutObserver();
+    }
+
+    /*
+     * Create an AlertDialog for modifying a workout general information such as the name.
+     * If passed in exercise is null, then it will create a new one. Creating of exercises is handled
+     * in a different fragment
+     */
+    private void modifyWorkout(Workout workout){
+        if(workout == null)
+        {
+            //pass in workout with blank ID
+            workout = new Workout("");
+            Log.d(TAG, "Creating WorkoutDialog for a new workout object");
+        }else{
+            Log.d(TAG, "Creating WorkoutDialog for " + workout.getWorkoutName());
+        }
+
+        FragmentManager manager = getFragmentManager();
+        WorkoutDialogFragment dialog = WorkoutDialogFragment.newInstance(workout);
+        dialog.setTargetFragment(WorkoutListFragment.this, NEW_WORKOUT_ACTIVITY_REQUEST_CODE);
+        dialog.show(manager, DIALOG_WORKOUT);
+
     }
 
     @Override

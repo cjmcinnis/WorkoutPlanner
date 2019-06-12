@@ -23,6 +23,7 @@ public class WorkoutRepository {
     public LiveData<Workout> getWorkout(long workoutId) { return mWorkoutDao.getWorkout(workoutId); }
     public LiveData<List<Exercise>> getExercises(long workoutId) { return mWorkoutDao.getExercises(workoutId); }
 
+    //Inset or updates an exercise
     public void insertExercise(Exercise exercise){
         new insertExerciseAsyncTask(mWorkoutDao).execute(exercise);
     }
@@ -64,4 +65,5 @@ public class WorkoutRepository {
             return null;
         }
     }
+
 }

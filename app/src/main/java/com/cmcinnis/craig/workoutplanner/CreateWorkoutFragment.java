@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.cmcinnis.craig.workoutplanner.Database.Exercise;
@@ -23,6 +24,10 @@ import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
 import java.util.Collections;
 import java.util.List;
 
+/*
+ * Page for managing Workouts by adding/modify the exercises inside of it
+ */
+
 public class CreateWorkoutFragment extends Fragment {
     private static final String TAG = "CreateWorkoutFragment";
     private static final int REQUEST_EXERCISE = 0; //code when returning from ExerciseDialogFragment
@@ -31,6 +36,7 @@ public class CreateWorkoutFragment extends Fragment {
     private WorkoutViewModel mWorkoutViewModel;
     private RecyclerView mExerciseRecyclerView;
     private ExerciseAdapter mAdapter;
+    private Button mNewExerciseButton;
 
     /*
      * Creates an instance of this fragment with a supplied workout Id
@@ -73,6 +79,15 @@ public class CreateWorkoutFragment extends Fragment {
             setupObservers(workoutId);
         }
 
+        //Setup button for adding a new exercise
+        mNewExerciseButton = (Button) view.findViewById(R.id.add_exercise_button);
+        mNewExerciseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Create an alert dialog for creating a new exercise
+                modifyExercise(null);
+            }
+        });
 
 
         return view;
@@ -95,7 +110,29 @@ public class CreateWorkoutFragment extends Fragment {
     }
 
     /*
-     * Setups an observer to watch when workout & exercises change
+     * Create an AlertDialog for modifying an exercise. If passed in exercise is null, then it
+     * will create a new one.
+     */
+    private void modifyExercise(Exercise exercise){
+        if(exercise == null)
+        {
+            exercise = new Exercise.Builder("", 0 , 0)
+                    .build();
+            exercise.setWorkoutId(mWorkout.getId());
+            Log.d(TAG, "Creating exercise dialog for a new exercise");
+        }else{
+            Log.d(TAG, "Creating ExerciseDialog for " + exercise.getExerciseName());
+        }
+
+        FragmentManager manager = getFragmentManager();
+        ExerciseDialogFragment dialog = ExerciseDialogFragment.newInstance(exercise);
+        dialog.setTargetFragment(CreateWorkoutFragment.this, REQUEST_EXERCISE);
+        dialog.show(manager, DIALOG_EXERCISE);
+
+    }
+
+    /*
+     * Setup an observer to watch when workout & exercises change
      */
     private void setupObservers(long workoutId){
         mWorkoutViewModel.getWorkout(workoutId).observe(this, new Observer<Workout>() {
@@ -134,12 +171,9 @@ public class CreateWorkoutFragment extends Fragment {
          */
         @Override
         public void onClick(View v) {
-            // Create a dialog fragment for adding a new exercise
-            FragmentManager manager = getFragmentManager();
-            ExerciseDialogFragment dialog = ExerciseDialogFragment.newInstance(this.mExercise);
-            dialog.setTargetFragment(CreateWorkoutFragment.this, REQUEST_EXERCISE);
-            dialog.show(manager, DIALOG_EXERCISE);
-            Log.d(TAG, "Creating ExerciseDialog for " + mExercise.getExerciseName());
+            // Modify the exercise using an alertdialog
+            modifyExercise(mExercise);
+
         }
 
         // Update each row with data

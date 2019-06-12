@@ -16,10 +16,10 @@ import java.util.List;
  */
 @Dao
 abstract class WorkoutDao {
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract long insertWorkout(Workout workout);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract void insertExercises(List<Exercise> exercises);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

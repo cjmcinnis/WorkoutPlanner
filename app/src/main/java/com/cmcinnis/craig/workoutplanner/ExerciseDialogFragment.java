@@ -21,7 +21,7 @@ import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
 
 /*
- * Fragment used for creating or modifying an exercise.
+ * Fragment used for creating or modifying the fields of an exercise.
  * Contains all the input fields for setting up an exercise
  */
 public class ExerciseDialogFragment extends DialogFragment {
@@ -76,6 +76,7 @@ public class ExerciseDialogFragment extends DialogFragment {
                             mWorkoutViewModel.insertExercise(mExercise);
                         }else{
                             Log.d(TAG, "Exercise validation failed");
+                            Toast.makeText(getContext(), "Exercise Validation failed", Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -90,7 +91,7 @@ public class ExerciseDialogFragment extends DialogFragment {
 
         //link all our fields in the dialog set default values
         mExerciseName = v.findViewById(R.id.dialog_exercise_name_input);
-        mExerciseName.setText("text");
+        mExerciseName.setText(mExercise.getExerciseName());
         mReps = v.findViewById(R.id.dialog_exercise_reps_input);
         mReps.setMinValue(Exercise.MIN_REPS);
         mReps.setMaxValue(Exercise.MAX_REPS);
@@ -133,6 +134,7 @@ public class ExerciseDialogFragment extends DialogFragment {
 
         return builder.create();
     }
+
     /*
      * Validates if the provided exercise is valid, if not display error msg
      */

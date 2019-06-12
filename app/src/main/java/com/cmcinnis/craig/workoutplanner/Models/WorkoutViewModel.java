@@ -29,14 +29,7 @@ public class WorkoutViewModel extends AndroidViewModel {
     public LiveData<List<Exercise>> getExercises(long workoutId) { return mWorkoutRepository.getExercises(workoutId);}
 
     public void insertWorkoutWithExercises(Workout workout){
-        // Check that the list is not empty
-        if (workout.getExercises().size() == 0)
-        {
-            //TODO: Add error msg to user?
-            Log.e(TAG, "Cannot submit a workout with no exercises.");
-        }else {
-            mWorkoutRepository.insertWorkoutAndExercises(workout);
-        }
+        mWorkoutRepository.insertWorkoutAndExercises(workout);
     }
 
     public void insertExercise(Exercise exercise){
