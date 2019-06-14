@@ -10,11 +10,9 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 import com.cmcinnis.craig.workoutplanner.Database.Workout;
 import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
 

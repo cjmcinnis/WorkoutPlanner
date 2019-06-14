@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,11 +18,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.cmcinnis.craig.workoutplanner.Database.Exercise;
 import com.cmcinnis.craig.workoutplanner.Database.Workout;
 import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -69,6 +68,20 @@ public class WorkoutListFragment extends Fragment {
         updateUI();
 
         return view;
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        Log.e(TAG, "Resuming WorkoutListFragment");
+
+        if(mAdapter != null)
+        {
+            mWorkoutRecyclerView.setAdapter(mAdapter);
+        }
+
+        //for updating the UI when returning from a CrimePagerActivity
+        updateUI();
     }
 
     /*
@@ -167,13 +180,23 @@ public class WorkoutListFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
 
-        /* when clicked send user to WorkoutViewerActivity
+        /* when clicked send user to WorkoutFragent
          * pass in workout
          */
         @Override
         public void onClick(View v) {
+            //create the new fragment
+            WorkoutFragment fragment = WorkoutFragment.newInstance(mWorkout.getId());
 
-            editWorkout(mWorkout);
+            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+            //replace the current fragment with the new one
+            transaction.replace(R.id.fragment_container, fragment);
+            transaction.addToBackStack(null);
+
+            transaction.commit();
+
+            //editWorkout(mWorkout);
         }
 
         // Update each row with data
