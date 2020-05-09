@@ -9,17 +9,21 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
-import com.cmcinnis.craig.workoutplanner.Database.Workout;
-import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
+import com.cmcinnis.craig.workoutplanner.database.Workout;
+import com.cmcinnis.craig.workoutplanner.models.WorkoutViewModel;
 
 import java.util.Collections;
 import java.util.List;
@@ -63,11 +67,18 @@ public class WorkoutListFragment extends Fragment {
         //setup workoutviewmodel
         mWorkoutViewModel = ViewModelProviders.of(this).get(WorkoutViewModel.class);
 
-
+        Toolbar toolbar = view.findViewById(R.id.the_toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         updateUI();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_workout_list_menu, menu);
+        //super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -169,7 +180,7 @@ public class WorkoutListFragment extends Fragment {
         updateUI();
     }
 
-    private class WorkoutHolder extends RecyclerView.ViewHolder implements  View.OnClickListener{
+    private class WorkoutHolder extends RecyclerView.ViewHolder implements  View.OnClickListener, View.OnLongClickListener {
         private Workout mWorkout;
         private TextView mTextView;
 
@@ -178,6 +189,7 @@ public class WorkoutListFragment extends Fragment {
             super(inflater.inflate(viewType, parent, false));
             mTextView = (TextView) itemView.findViewById(R.id.workout_title);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
         }
 
         /* when clicked send user to WorkoutFragent
@@ -199,11 +211,23 @@ public class WorkoutListFragment extends Fragment {
             //editWorkout(mWorkout);
         }
 
+        //on long click we edit the exercises in the workout
+        @Override
+        public boolean onLongClick(View view) {
+            Log.d(TAG, "onLongClick started");
+            editWorkout(mWorkout);
+
+            return true;
+        }
+
+
         // Update each row with data
         public void bind(Workout workout){
             mWorkout = workout;
             mTextView.setText(mWorkout.getWorkoutName());
         }
+
+
     }
 
     private class WorkoutAdapter extends RecyclerView.Adapter<WorkoutHolder>{

@@ -13,9 +13,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.cmcinnis.craig.workoutplanner.Database.Workout;
-import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
+import com.cmcinnis.craig.workoutplanner.database.Workout;
+import com.cmcinnis.craig.workoutplanner.models.WorkoutViewModel;
 
+/*
+ * Main workout class that allows users to do the following:
+ * - Start exercise with timer
+ * - Mark Exercise as complete or failed
+ * - Skip exercise
+ *
+ */
 public class WorkoutDialogFragment extends DialogFragment {
     private static final String TAG = "WorkoutDialogFragment";
     private static final String ARG_DATA = "exercise";

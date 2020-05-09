@@ -14,8 +14,8 @@ import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
-import com.cmcinnis.craig.workoutplanner.Database.Exercise;
-import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
+import com.cmcinnis.craig.workoutplanner.database.Exercise;
+import com.cmcinnis.craig.workoutplanner.models.WorkoutViewModel;
 
 /*
  * Fragment used for creating or modifying the fields of an exercise.

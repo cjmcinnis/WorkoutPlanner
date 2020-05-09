@@ -16,9 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.cmcinnis.craig.workoutplanner.Database.Exercise;
-import com.cmcinnis.craig.workoutplanner.Database.Workout;
-import com.cmcinnis.craig.workoutplanner.Models.WorkoutViewModel;
+import com.cmcinnis.craig.workoutplanner.database.Exercise;
+import com.cmcinnis.craig.workoutplanner.database.Workout;
+import com.cmcinnis.craig.workoutplanner.models.WorkoutViewModel;
 
 import java.util.Collections;
 import java.util.List;

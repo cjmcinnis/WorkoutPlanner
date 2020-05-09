@@ -9,5 +9,7 @@
     <string name="dialog_set_input">Sets</string>
     <string name="dialog_rest_input">Rest Time</string>
     <string name="name_of_workout">Name of workout</string>
-    <string name="start">Start</string>
+    <string name="start_exercise">Start</string>
+    <string name="finish_exercise">Finish</string>
+    <string name="action_remove">Remove</string>
 </resources>
